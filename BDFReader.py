@@ -68,29 +68,6 @@ def  bdf_reader(filename):
 class BDF_File:
 
     def __init__(self, record=None, duration=None, channels=None, samples=None, digital_min=None, digital_max=None, physical_min=None, physical_max=None, labels=None, data=None):
-        self.numRec = record#{{{
-        self.RecDur = duration
-        self.numChan = channels
-        self.numSam = samples
-        self.Dmin = digital_min
-        self.Dmax = digital_max
-        self.Pmin = physical_min
-        self.Pmax = physical_max
-        self.labels = labels
-        self.data = data
-        self.Mdata = None
-        self.Mmax = 0
-        self.Mmin = 0
-        self.startRec = ''
-        self.events = None
-        self.cnt_start = 0
-        self.cnt_end = 0
-        self.cnt_now = 0
-        self.inc = 10
-        #}}}
-
-    def setTime(self,time):
-        self.startRec = time
 
     def setIncrement(self,inc):
         self.inc = inc
@@ -126,12 +103,12 @@ class BDF_File:
             validlines = [True]*size
         else:
             size = validlines.count(True)
-        coef = np.linspace(-size/2,size/2+1,size)
+        coef = np.linspace(-size/2,size/2+1,size)*30000
         datos = np.zeros((size,self.numRec*((self.numSam-1)/10+1)), dtype=np.int32)
         j = 0
         for i in range(0,self.numChan-1):
             if validlines[i]:
-                datos[j] = np.array(self.data[i])-np.average(self.data[i])+coef[j]*30000
+                datos[j] = np.array(self.data[i])-np.average(self.data[i])+coef[j]
                 j += 1
 
         self.data = np.array(datos)
