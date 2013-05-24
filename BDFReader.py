@@ -68,6 +68,26 @@ def  bdf_reader(filename):
 class BDF_File:
 
     def __init__(self, record=None, duration=None, channels=None, samples=None, digital_min=None, digital_max=None, physical_min=None, physical_max=None, labels=None, data=None):
+        self.numRec = record#{{{
+        self.RecDur = duration
+        self.numChan = channels
+        self.numSam = samples
+        self.Dmin = digital_min
+        self.Dmax = digital_max
+        self.Pmin = physical_min
+        self.Pmax = physical_max
+        self.labels = labels
+        self.data = data
+        self.Mdata = None
+        self.Mmax = 0
+        self.Mmin = 0
+        self.startRec = ''
+        self.events = None
+        self.cnt_start = 0
+        self.cnt_end = 0
+        self.cnt_now = 0
+        self.inc = 10
+        #}}}
 
     def setIncrement(self,inc):
         self.inc = inc

@@ -9,15 +9,12 @@ from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanva
 import matplotlib.pyplot as plt
 import numpy as np
 from os import getcwd
-from datetime import timedelta
 import multiprocessing as mp
 
 
 videofile = Video_File()
 lines = []
-elines = []
 validlines = []
-evalidlines = []
 StopEvent = True
 canvas = None
 inc = 10
@@ -129,7 +126,27 @@ class MainWindow:
         self.box4.show()
         self.box5.show()
         self.box1.pack_start(self.box3, gtk.FALSE, gtk.TRUE, 0)
-        self.box3.show()#}}}
+        self.box3.show()
+
+        #Label de Amplitud
+        self.hsbox = gtk.HBox(gtk.FALSE, 0)
+        self.label = gtk.Label("Amplitud:")
+        self.label.set_alignment(xalign=0.05, yalign=0.5)
+        self.boxv1.pack_start(self.label, gtk.FALSE, gtk.TRUE, 0)
+        self.label.show()
+        adj2 = gtk.Adjustment(10, 1, 101, 1, 1.0, 1.0)
+        adj2.connect("value_changed", self.update_amplitud)
+        self.hscale = gtk.HScale(adj2)
+        self.hscale.set_size_request(200, 30)
+        self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+        self.hscale.set_digits(0)
+        self.hscale.set_value_pos(gtk.POS_TOP)
+        self.hscale.set_draw_value(gtk.TRUE)
+        self.hsbox.pack_start(self.hscale, gtk.TRUE, gtk.TRUE, 0)
+        self.hscale.show()
+        self.boxv1.pack_start(self.hsbox, gtk.FALSE, gtk.TRUE, 0)
+        self.hsbox.show()
+        #}}}
 
         #################################################################
         #################            CANVAS             #################
@@ -600,8 +617,6 @@ class MainWindow:
         global lines
         global canvas
         global validlines
-        global elines
-        global evalidlines
 
         if StopEvent:
             return True
