@@ -167,7 +167,7 @@ class MainWindow(gtk.Window):
             frame = cv.QueryFrame(capture)
             p.setData(251)
             s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
-            cv.WriteFrame(writer, frame);
+            cv.WriteFrame(writer, frame)
             if StopEvent.is_set():
                 loop = False
             mov = mov+1
