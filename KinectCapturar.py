@@ -1,9 +1,11 @@
 import VideoReader
+from freenect
 from socket import socket, AF_INET, SOCK_STREAM
 import parallel
 import time
 import cv
 import pygtk
+import frame_convert
 import multiprocessing as mp
 pygtk.require('2.0')
 import gtk
@@ -153,21 +155,21 @@ class MainWindow(gtk.Window):
         s = socket(AF_INET, SOCK_STREAM)
         s.connect((HOST, PORT))
         loop = True
-        capture = cv.CaptureFromCAM(0)
         RecordingEvent.wait()
-        width = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH))
-        height = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT))
-        writer = cv.CreateVideoWriter("video-out.avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        width = 640
+        height = 480
+        writer1 = cv.CreateVideoWriter("video_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
+        writer2 = cv.CreateVideoWriter("kinect_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
         p.setData(1)
         s.send('{"code":1,"time":"'+str(time.time())+'"}')
 
         mov=0
         while (loop):
             p.setData(250)
-            frame = cv.QueryFrame(capture)
             p.setData(251)
             s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
-            cv.WriteFrame(writer, frame)
+            cv.WriteFrame(writer1, get_video())
+            cv.WriteFrame(writer2, get_depth())
             if StopEvent.is_set():
                 loop = False
             mov = mov+1
@@ -175,7 +177,15 @@ class MainWindow(gtk.Window):
         p.setData(2)
         s.send('{"code":2,"time":"'+str(time.time())+'"}')
         del writer
+        del writer2
         s.close()
+
+def get_depth():
+    return frame_convert.pretty_depth_cv(freenect.sync_get_depth()[0])
+
+def get_video():
+    return frame_convert.video_cv(freenect.sync_get_video()[0])
+
 
 if __name__ == "__main__":
     principal = MainWindow()
