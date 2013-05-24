@@ -157,7 +157,7 @@ class MainWindow(gtk.Window):
         RecordingEvent.wait()
         width = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH))
         height = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT))
-        writer = cv.CreateVideoWriter("video-out.avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        writer = cv.CreateVideoWriter("/data/video/video_"+str(time.strftime("%d%m%Y"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
         p.setData(1)
         s.send('{"code":1,"time":"'+str(time.time())+'"}')
 

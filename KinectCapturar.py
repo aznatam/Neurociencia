@@ -158,18 +158,18 @@ class MainWindow(gtk.Window):
         RecordingEvent.wait()
         width = 640
         height = 480
-        writer1 = cv.CreateVideoWriter("video_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
-        writer2 = cv.CreateVideoWriter("kinect_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
+        writer1 = cv.CreateVideoWriter("/data/video/video_"+str(time.strftime("%d%m%Y"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        writer2 = cv.CreateVideoWriter("/data/video/kinect_"+str(time.strftime("%d%m%Y"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
         p.setData(1)
         s.send('{"code":1,"time":"'+str(time.time())+'"}')
 
         mov=0
         while (loop):
             p.setData(250)
-            p.setData(251)
-            s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
             cv.WriteFrame(writer1, get_video())
             cv.WriteFrame(writer2, get_depth())
+            p.setData(251)
+            s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
             if StopEvent.is_set():
                 loop = False
             mov = mov+1
