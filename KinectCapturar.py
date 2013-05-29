@@ -176,7 +176,7 @@ class MainWindow(gtk.Window):
 
         p.setData(2)
         s.send('{"code":2,"time":"'+str(time.time())+'"}')
-        del writer
+        del writer1
         del writer2
         s.close()
 

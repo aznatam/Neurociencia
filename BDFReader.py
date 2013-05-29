@@ -87,6 +87,8 @@ class BDF_File:
         self.cnt_end = 0
         self.cnt_now = 0
         self.inc = 10
+        self.factor = 1
+        self.coef = None
         #}}}
 
     def setIncrement(self,inc):
