@@ -12,7 +12,7 @@ from os import getcwd
 RecordingEvent = mp.Event()
 StopEvent = mp.Event()
 Psychopy_file = ''
-HOST = '192.168.0.101'
+HOST = '192.168.0.102'
 PORT = 15555
 
 class MainWindow(gtk.Window):
@@ -149,33 +149,33 @@ class MainWindow(gtk.Window):
         global RecordingEvent
         global StopEvent
 
-        p = parallel.Parallel()
-        s = socket(AF_INET, SOCK_STREAM)
-        s.connect((HOST, PORT))
+        #p = parallel.Parallel()
+        #s = socket(AF_INET, SOCK_STREAM)
+        #s.connect((HOST, PORT))
         loop = True
         capture = cv.CaptureFromCAM(0)
         RecordingEvent.wait()
-        width = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH))
-        height = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT))
-        writer = cv.CreateVideoWriter("/data/video/video_"+str(time.strftime("%d%m%Y"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
-        p.setData(1)
-        s.send('{"code":1,"time":"'+str(time.time())+'"}')
+        width = 640
+        height = 480
+        writer = cv.CreateVideoWriter("data/video/video_"+str(time.strftime("%d%m%Y"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        #p.setData(1)
+        #s.send('{"code":1,"time":"'+str(time.time())+'"}')
 
         mov=0
         while (loop):
-            p.setData(250)
+            #p.setData(250)
             frame = cv.QueryFrame(capture)
-            p.setData(251)
-            s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
+            #p.setData(251)
+            #s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
             cv.WriteFrame(writer, frame)
             if StopEvent.is_set():
                 loop = False
             mov = mov+1
 
-        p.setData(2)
-        s.send('{"code":2,"time":"'+str(time.time())+'"}')
+        #p.setData(2)
+        #s.send('{"code":2,"time":"'+str(time.time())+'"}')
         del writer
-        s.close()
+        #s.close()
 
 if __name__ == "__main__":
     principal = MainWindow()
