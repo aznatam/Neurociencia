@@ -19,6 +19,8 @@ while 1:
     frame = get_depth()
     cv.ShowImage('Depth', frame)
     cv.ShowImage('Video', get_video())
-    if cv.WaitKey(10) == 27:
+    if cv.WaitKey(20) == 27:
         break
+
+freenect.sync_stop
 del writer

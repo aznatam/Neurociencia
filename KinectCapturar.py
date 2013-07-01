@@ -14,7 +14,7 @@ from os import getcwd
 RecordingEvent = mp.Event()
 StopEvent = mp.Event()
 Psychopy_file = ''
-HOST = '192.168.0.102'
+HOST = '192.168.0.104'
 PORT = 15555
 
 class MainWindow(gtk.Window):
@@ -155,11 +155,13 @@ class MainWindow(gtk.Window):
         s = socket(AF_INET, SOCK_STREAM)
         s.connect((HOST, PORT))
         loop = True
-        RecordingEvent.wait()
         width = 640
         height = 480
         writer1 = cv.CreateVideoWriter("data/video/video_"+str(time.strftime("%d%m%Y"))+"_"+str(time.strftime("%s"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
         writer2 = cv.CreateVideoWriter("data/video/kinect_"+str(time.strftime("%d%m%Y"))+"_"+str(time.strftime("%s"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        cv.WriteFrame(writer1, get_video())
+        cv.WriteFrame(writer2, get_depth())
+        RecordingEvent.wait()
         p.setData(1)
         s.send('{"code":1,"time":"'+str(time.time())+'"}')
 
