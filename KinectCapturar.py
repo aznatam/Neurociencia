@@ -1,5 +1,5 @@
 import VideoReader
-from freenect
+import freenect
 from socket import socket, AF_INET, SOCK_STREAM
 import parallel
 import time
@@ -14,7 +14,7 @@ from os import getcwd
 RecordingEvent = mp.Event()
 StopEvent = mp.Event()
 Psychopy_file = ''
-HOST = '192.168.0.101'
+HOST = '192.168.0.104'
 PORT = 15555
 
 class MainWindow(gtk.Window):
@@ -155,29 +155,33 @@ class MainWindow(gtk.Window):
         s = socket(AF_INET, SOCK_STREAM)
         s.connect((HOST, PORT))
         loop = True
-        RecordingEvent.wait()
         width = 640
         height = 480
-        writer1 = cv.CreateVideoWriter("video_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
-        writer2 = cv.CreateVideoWriter("kinect_out.avi",cv.CV_FOURCC("F","L","V","1"),15.0,(width,height),1)
+        writer1 = cv.CreateVideoWriter("data/video/video_"+str(time.strftime("%d%m%Y"))+"_"+str(time.strftime("%s"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        writer2 = cv.CreateVideoWriter("data/video/kinect_"+str(time.strftime("%d%m%Y"))+"_"+str(time.strftime("%s"))+".avi",cv.CV_FOURCC("F","L","V","1"),15,(width,height),1)
+        cv.WriteFrame(writer1, get_video())
+        cv.WriteFrame(writer2, get_depth())
+        RecordingEvent.wait()
         p.setData(1)
         s.send('{"code":1,"time":"'+str(time.time())+'"}')
 
         mov=0
         while (loop):
             p.setData(250)
-            p.setData(251)
-            s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
             cv.WriteFrame(writer1, get_video())
             cv.WriteFrame(writer2, get_depth())
+            p.setData(251)
+            s.send('{"code":'+str(221+mov%20)+',"time":"'+str(time.time())+'"}')
             if StopEvent.is_set():
                 loop = False
             mov = mov+1
 
         p.setData(2)
         s.send('{"code":2,"time":"'+str(time.time())+'"}')
-        del writer
+        print "Starting closing and deleting files"
+        del writer1
         del writer2
+        print "Ended closing and deleting files"
         s.close()
 
 def get_depth():

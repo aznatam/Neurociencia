@@ -1,0 +1,88 @@
+ejecutar 'sudo rmmod lp'
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************           PREVIEW           *************
+*************                             *************
+*******************************************************
+******************************************************/
+Programa para visualizar la camara que este conectada al
+computador.
+
+Ejecución: python Preview.py
+
+Terminar: apretar 'ESC'
+
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************       PREVIEW KINECT        *************
+*************                             *************
+*******************************************************
+******************************************************/
+Programa para visualizar la camara y profundidad del
+kinect que este conectado al computador.
+
+Ejecución: python KinectPreview.py
+
+Terminar: apretar 'ESC'
+
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************          CAPTURAR           *************
+*************                             *************
+*******************************************************
+******************************************************/
+Programa para capturar con la camara que este conectada 
+al computador. Mantiene sincronización con el eeg y el
+programa interactivo.
+
+Ejecución: python Capturar.py
+
+Parametros: en el archivo se encuentran las variables
+HOST y PORT para la sincronización con el programa inter
+activo a traves de un socket.
+
+Uso: Para comenzar a grabar presionar el boton Rec, para 
+finalizar apretar el boton Stop. Solo se puede hacer una
+sola grabación por lo que volver a apretar Rec no vuelve
+a retomar la grabación. El video grabado queda guardado
+en la carpeta data/video/ con nombre video_{fecha}.avi
+
+Terminar: Cerrando la ventana o seleccionando la opción
+salir del menu File.
+
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************      CAPTURAR KINECT        *************
+*************                             *************
+*******************************************************
+******************************************************/
+Programa para capturar con la camara que este conectada 
+al computador. Mantiene sincronización con el eeg y el
+programa interactivo.
+
+Ejecución: python KinectCapturar.py
+
+Parametros: en el archivo se encuentran las variables
+HOST y PORT para la sincronización con el programa inter
+activo a traves de un socket.
+
+Uso: Para comenzar a grabar presionar el boton Rec, para 
+finalizar apretar el boton Stop. Solo se puede hacer una
+sola grabación por lo que volver a apretar Rec no vuelve
+a retomar la grabación. El video grabado queda guardado
+en la carpeta /data/video/ con nombre "video_{fecha}.avi"
+. La profundidad del kinect queda guardada como video en
+la carpeta /data/video/ con nombre "kinect_{fecha}.avi".
+
+Terminar: Cerrando la ventana o seleccionando la opción
+salir del menu File.
+
+
