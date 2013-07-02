@@ -4,6 +4,7 @@ import sys
 from datetime import timedelta
 import pygtk
 pygtk.require('2.0')
+import gtk, gobject
 
 class Video_File:
 
@@ -23,6 +24,12 @@ class Video_File:
 
     def setTime(self,time):
         self.startRec = time
+
+    def printAll(self):
+        print 'Filename: ' + self.filename#{{{
+        print 'Length: ' + str(self.length)
+        print 'Height: ' + str(self.height)
+        print 'Width: ' + str(self.width)#}}}
 
 
     def getFrame(self):
@@ -49,12 +56,10 @@ class Video_File:
             cv.SetCaptureProperty(self.capture,cv.CV_CAP_PROP_POS_FRAMES,0)
             self.cur = 1#}}}
 
-
     def fullForwardFrame(self):
         if self.capture :#{{{
             cv.SetCaptureProperty(self.capture,cv.CV_CAP_PROP_POS_FRAMES,int(cv.GetCaptureProperty(self.capture,cv.CV_CAP_PROP_FRAME_COUNT))-1)
             self.cur = self.length#}}}
-
 
     def getFrameAsPixbuf(self):
         frame = self.getFrame()#{{{
@@ -62,7 +67,6 @@ class Video_File:
             return None
         cv.CvtColor(frame, frame, cv.CV_BGR2RGB)
         return gtk.gdk.pixbuf_new_from_data(frame.tostring(), gtk.gdk.COLORSPACE_RGB,False, 8, frame.width, frame.height, frame.width*frame.nChannels)#}}}
-
 
     def display(self):
         print 'Loading video file "' + self.filename + '"...'#{{{
@@ -117,5 +121,3 @@ def captureCamera(RecordingEvent, StopEvent, capture):
             loop = False
 
     del writer#}}}
-
-

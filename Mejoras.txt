@@ -1,0 +1,48 @@
+/******************************************************
+*******************************************************
+*************                             *************
+*************          BDFReader          *************
+*************                             *************
+*******************************************************
+******************************************************/
+- Actualmente se estan manejando dos grandes arreglos el
+real data y Mdata. data es la información real que viene
+del archivo.bdf, MData es la información manipulada de 
+tal manera que pueda ser visualizada en los gráficos.
+Una mejora seria que solo hubiese data y lo otro se cal
+culara on-line para reducir la cantidad de memoria ocu
+pada.
+
+-Guardar MData a csv es trivial y podria ser de bastante 
+ayuda en caso de querer utilizar matlab.
+
+
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************           Syncro            *************
+*************                             *************
+*******************************************************
+******************************************************/
+Se han pedido varias cosas:
+
+-Que se muestre de alguna manera, en el grafico, el cam
+bio de un frame a otro.
+
+-Que el tiempo visualizado en el grafico se pueda modi
+ficar tal como se modifica la velocidad de visualización.
+
+-Que se puedan setear labels a los frames.
+
+
+
+/******************************************************
+*******************************************************
+*************                             *************
+*************         VideoReader         *************
+*************                             *************
+*******************************************************
+******************************************************/
+- VideoReader debría ser el encargado de manejar el ar
+chivo que guarda los labels.

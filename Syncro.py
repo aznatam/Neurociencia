@@ -9,15 +9,12 @@ from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanva
 import matplotlib.pyplot as plt
 import numpy as np
 from os import getcwd
-from datetime import timedelta
 import multiprocessing as mp
 
 
 videofile = Video_File()
 lines = []
-elines = []
 validlines = []
-evalidlines = []
 StopEvent = True
 canvas = None
 inc = 10
@@ -129,7 +126,27 @@ class MainWindow:
         self.box4.show()
         self.box5.show()
         self.box1.pack_start(self.box3, gtk.FALSE, gtk.TRUE, 0)
-        self.box3.show()#}}}
+        self.box3.show()
+
+        #Label de Amplitud
+        #self.hsbox = gtk.HBox(gtk.FALSE, 0)
+        #self.label = gtk.Label("Amplitud:")
+        #self.label.set_alignment(xalign=0.05, yalign=0.5)
+        #self.boxv1.pack_start(self.label, gtk.FALSE, gtk.TRUE, 0)
+        #self.label.show()
+        #adj2 = gtk.Adjustment(10, 1, 101, 1, 1.0, 1.0)
+        #adj2.connect("value_changed", self.update_amplitud)
+        #self.hscale = gtk.HScale(adj2)
+        #self.hscale.set_size_request(200, 30)
+        #self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+        #self.hscale.set_digits(0)
+        #self.hscale.set_value_pos(gtk.POS_TOP)
+        #self.hscale.set_draw_value(gtk.TRUE)
+        #self.hsbox.pack_start(self.hscale, gtk.TRUE, gtk.TRUE, 0)
+        #self.hscale.show()
+        #self.boxv1.pack_start(self.hsbox, gtk.FALSE, gtk.TRUE, 0)
+        #self.hsbox.show()
+        #}}}
 
         #################################################################
         #################            CANVAS             #################
@@ -408,7 +425,7 @@ class MainWindow:
         box2.show()
         box3 = gtk.VBox(gtk.FALSE, 0)
         box3.set_border_width(15)
-        for i in range(self.BDF_file.numChan/2+1,self.BDF_file.numChan):
+        for i in range(self.BDF_file.numChan/2+1,self.BDF_file.numChan-1):
             button = gtk.CheckButton(str(i) + '- ' + str(self.BDF_file.labels[i]))
             button.set_active(validlines[i])
             button.connect("toggled", self.chequed, i)
@@ -442,7 +459,8 @@ class MainWindow:
         #self.axes.set_xlim(self.BDF_file.cnt_now-self.BDF_file.numSam/20,self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20)
 
         x = np.linspace(0,0.25,self.BDF_file.numSam/5)
-        for i in range(0,self.BDF_file.numChan):
+        print "Largo xdata: " + str(len(x))
+        for i in range(0,self.BDF_file.numChan-1):
             line, = self.axes.plot(x, self.BDF_file.Mdata[i][0:self.BDF_file.numSam/5], animated=True, lw=1)
             lines.append(line)
             validlines.append(True)
@@ -469,7 +487,7 @@ class MainWindow:
         frame = videofile.getFrameAsPixbuf()
         if frame:
             self.video.set_from_pixbuf(frame)
-        inx = np.where(self.BDF_file.events[self.BDF_file.cnt_now:] == 251)
+        inx = np.where(self.BDF_file.events[self.BDF_file.cnt_now:] != 0)
         if inx[0].size:
             self.BDF_file.cnt_now += inx[0][1]
         self.cflabel.set_text(str(videofile.cur))
@@ -481,7 +499,7 @@ class MainWindow:
         frame = videofile.getFrameAsPixbuf()
         if frame:
             self.video.set_from_pixbuf(frame)
-        inx = np.where(self.BDF_file.events[self.BDF_file.cnt_now:] == 251)
+        inx = np.where(self.BDF_file.events[self.BDF_file.cnt_now:] != 0)
         if inx[0].size:
             self.BDF_file.cnt_now += inx[0][inx[0].size-1]
         self.cflabel.set_text(str(videofile.cur))
@@ -500,7 +518,7 @@ class MainWindow:
 
         # update the data
         self.axes.hold(True)
-        for i in range(0,self.BDF_file.numChan):
+        for i in range(0,self.BDF_file.numChan-1):
             if validlines[i]:
                 lines[i].set_ydata(self.BDF_file.Mdata[i][self.BDF_file.cnt_now-self.BDF_file.numSam/20:self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20])
                 #lines[i].set_xdata(np.arange(self.BDF_file.cnt_now-self.BDF_file.numSam/20,self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20))
@@ -524,7 +542,7 @@ class MainWindow:
         global videofile#{{{
         videofile.rewindFrame()
         self.video.set_from_pixbuf(videofile.getFrameAsPixbuf())
-        inx = np.where(self.BDF_file.events[:self.BDF_file.cnt_now] == 251)
+        inx = np.where(self.BDF_file.events[:self.BDF_file.cnt_now] != 0)
         if inx[0].size:
             self.BDF_file.cnt_now = inx[0][inx[0].size-1]
         self.cflabel.set_text(str(videofile.cur))
@@ -535,7 +553,7 @@ class MainWindow:
         videofile.fullRewindFrame()
         self.video.set_from_pixbuf(videofile.getFrameAsPixbuf())
         self.video.set_from_pixbuf(videofile.getFrameAsPixbuf())
-        inx = np.where(self.BDF_file.events[:self.BDF_file.cnt_now] == 251)
+        inx = np.where(self.BDF_file.events[:self.BDF_file.cnt_now] != 0)
         if inx[0].size:
             self.BDF_file.cnt_now = inx[0][0]
         self.cflabel.set_text(str(videofile.cur))
@@ -554,7 +572,7 @@ class MainWindow:
 
         # update the data
         self.axes.hold(True)
-        for i in range(0,self.BDF_file.numChan):
+        for i in range(0,self.BDF_file.numChan-1):
             if validlines[i]:
                 lines[i].set_ydata(self.BDF_file.Mdata[i][self.BDF_file.cnt_now-self.BDF_file.numSam/20:self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20])
                 #lines[i].set_xdata(np.arange(self.BDF_file.cnt_now-self.BDF_file.numSam/20,self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20))
@@ -600,8 +618,6 @@ class MainWindow:
         global lines
         global canvas
         global validlines
-        global elines
-        global evalidlines
 
         if StopEvent:
             return True
@@ -614,7 +630,8 @@ class MainWindow:
 
         # update the data
         self.axes.hold(True)
-        for i in range(0,self.BDF_file.numChan):
+        print "Largo ydata: " + str(len(range(self.BDF_file.cnt_now-self.BDF_file.numSam/20,self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20)))
+        for i in range(0,self.BDF_file.numChan-1):
             if validlines[i]:
                 lines[i].set_ydata(self.BDF_file.Mdata[i][self.BDF_file.cnt_now-self.BDF_file.numSam/20:self.BDF_file.numSam/5+self.BDF_file.cnt_now-self.BDF_file.numSam/20])
                 # just draw the animated artist
@@ -622,7 +639,7 @@ class MainWindow:
 
         self.axes.hold(False)
 
-        if np.where(self.BDF_file.events[self.BDF_file.cnt_now:(self.BDF_file.cnt_now+self.BDF_file.inc)] == 251)[0].size:
+        if np.where(self.BDF_file.events[self.BDF_file.cnt_now:(self.BDF_file.cnt_now+self.BDF_file.inc)] != 0)[0].size:
             frame = videofile.getFrameAsPixbuf()
             if frame:
                 self.video.set_from_pixbuf(frame)
