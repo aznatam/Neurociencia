@@ -90,10 +90,9 @@ class BDF_File:
         self.cnt_end = 0
         self.cnt_now = 0
         self.inc = 10
+        self.factor = 1
+        self.coef = None
         #}}}
-
-    def setTime(self,time):
-        self.startRec = time
 
     def setIncrement(self,inc):
         self.inc = inc
